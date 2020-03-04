@@ -1,10 +1,26 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <router-link :to="{ name: 'Home' }" class="nav-link">
+          Home
+          <span class="sr-only">(current)</span>
+        </router-link>
+      </li>
+      <li class="nav-item">
+        <router-link :to="{ name: 'CreateMenu' }" class="nav-link">
+          CreateMenu
+          <span class="sr-only">(current)</span>
+        </router-link>
+      </li>
+    </ul>
+    <img
+      width="100%"
+      src="https://www.vigsitainteractives.com/wp-content/uploads/2019/07/banner.jpg"
+    />
+    <br />
+    <br />
+    <router-view />
   </div>
 </template>
 
