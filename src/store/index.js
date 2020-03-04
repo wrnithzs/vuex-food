@@ -10,30 +10,35 @@ export default new Vuex.Store({
   mutations: {
     'SET_FOOD' (state, foodlist) {
       state.foods = foodlist
-      console.log(state.foods)
     }
   },
   actions: {
     loadFoods ({ commit }) {
       const foodlist = []
-      db.collection('foods')
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            const food = {
-              id: doc.id,
-              name: doc.data().name,
-              type: doc.data().type,
-              price: doc.data().price
-            }
-            foodlist.push(food)
+      try {
+        db.collection('foods')
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              const food = {
+                id: doc.id,
+                name: doc.data().name,
+                type: doc.data().type,
+                price: doc.data().price
+              }
+              foodlist.push(food)
+            })
           })
-        })
-      commit('SET_FOOD', foodlist)
-      console.log('loaded success!!')
+        commit('SET_FOOD', foodlist)
+        console.log('loaddata success!!')
+        return 'loaded!'
+      } catch {
+        console.log('loaded success!!')
+        return 'loaddata error!'
+      }
     },
-    addFoods ({ commit }, foods) {
-      db.collection('foods').add({
+    async addFoods ({ commit }, foods) {
+      await db.collection('foods').add({
         name: foods.name,
         type: foods.type,
         price: foods.price
@@ -45,12 +50,34 @@ export default new Vuex.Store({
           console.error('Error adding document: ', error)
         })
     },
-    deleteFood ({ commit }, foodID) {
-      db.collection('foods').doc(foodID).delete().then(function () {
+    async deleteFood ({ commit }, menuID) {
+      await db.collection('foods').doc(menuID).delete().then(function () {
         console.log('Document successfully deleted!')
       }).catch(function (error) {
         console.error('Error removing document: ', error)
       })
+    },
+    async getMenu ({ commit }, menuID) {
+      console.log('เข้ามาgetแล้วจ้าแม่')
+      const doc = await db.collection('foods').doc(menuID).get()
+      if (doc.exists) {
+        return doc.data()
+      }
+    },
+    async updateMenu ({ commit }, editMenu) {
+      console.log('เข้ามาupdate')
+      console.log(editMenu)
+      try {
+        await db.collection('foods').doc(editMenu.id).update({
+          name: editMenu.name,
+          type: editMenu.type,
+          price: editMenu.price
+        })
+        console.log('updated! success')
+        return 'updated!'
+      } catch {
+        return 'update error!'
+      }
     }
   },
   getters: {
