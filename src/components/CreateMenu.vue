@@ -3,37 +3,31 @@
     <h1>CreateMenu</h1>
     <form @submit.prevent="save()">
       <div class="form-group">
-        <label for="todoTitle"> Menu </label>
-        <br />
+        <label> Menu </label><br />
         <input v-model="food.name" type="text" class="form-control" />
-        <label for="todoTitle" class="form-text text-muted">
+        <label class="form-text text-muted">
           <small>* Required</small>
-        </label>
-        <br />
+        </label><br />
       </div>
       <div class="form-group">
-        <label for="todoTitle">Type</label>
-        <br />
+        <label>Type</label><br />
         <input v-model="food.type" type="text" class="form-control" />
-        <label for="todoTitle" class="form-text text-muted">
+        <label class="form-text text-muted">
           <small>* Required</small>
-        </label>
-        <br />
+        </label><br />
       </div>
       <div class="form-group">
-        <label for="todoTitle">Price</label>
-        <br />
+        <label>Price</label><br />
         <input v-model="food.price" type="text" class="form-control" />
-        <label for="todoTitle" class="form-text text-muted">
+        <label class="form-text text-muted">
           <small>* Required</small>
-        </label>
-        <br />
+        </label><br />
       </div>
     </form>
     <router-link to="/">
       <button type="summit" class="btn btn-warning">Cancel</button>
     </router-link>&nbsp;
-    <button type="summit" class="btn btn-info" v-on:click="save">Save</button>
+    <button type="summit" class="btn btn-info" @click="save">Save</button>
   </div>
 </template>
 
@@ -47,7 +41,7 @@ export default {
         id: '',
         name: '',
         type: '',
-        price: ''
+        price: undefined
       }
     }
   },
@@ -55,10 +49,16 @@ export default {
     ...mapActions({
       addFoods: 'addFoods'
     }),
-    save () {
-      // console.log(this.food)
-      this.addFoods(this.food)
-      this.$router.push({ path: '/' })
+    async save () {
+      const finish = await this.addFoods(this.food)
+      if (finish === 'Added!') {
+        this.todo = {
+          id: '',
+          task: '',
+          detail: ''
+        }
+        this.$router.push({ path: '/' })
+      }
     }
   }
 }

@@ -3,31 +3,25 @@
     <h1> EditMenu</h1>
     <form @submit.prevent="save()">
       <div class="form-group">
-        <label for="todoTitle"> Menu </label>
-        <br />
+        <label> Menu </label><br />
         <input v-model="editMenu.name" type="text" class="form-control" />
-        <label for="todoTitle" class="form-text text-muted">
+        <label class="form-text text-muted">
           <small>* Required</small>
-        </label>
-        <br />
+        </label><br />
       </div>
       <div class="form-group">
-        <label for="todoTitle">Type</label>
-        <br />
+        <label >Type</label><br />
         <input v-model="editMenu.type" type="text" class="form-control" />
-        <label for="todoTitle" class="form-text text-muted">
+        <label class="form-text text-muted">
           <small>* Required</small>
-        </label>
-        <br />
+        </label><br />
       </div>
       <div class="form-group">
-        <label for="todoTitle">Price</label>
-        <br />
+        <label>Price</label><br />
         <input v-model="editMenu.price" type="text" class="form-control" />
-        <label for="todoTitle" class="form-text text-muted">
+        <label class="form-text text-muted">
           <small>* Required</small>
-        </label>
-        <br />
+        </label><br />
       </div>
     </form>
     <router-link to="/">
@@ -49,20 +43,17 @@ export default {
         type: '',
         price: undefined
       }
-      // editID: undefined
     }
   },
   async mounted () {
     const menuID = this.$route.params.id
     if (menuID !== undefined) {
-      console.log('ส่ง menuID = ' + menuID)
       const menu = await this.getMenu(menuID)
       this.editMenu.id = menuID
       this.editMenu.name = menu.name
       this.editMenu.type = menu.type
       this.editMenu.price = menu.price
     }
-    // console.log(this.editMenu)
   },
   methods: {
     ...mapActions({
@@ -72,9 +63,8 @@ export default {
     async save () {
       const menuID = this.$route.params.id
       if (menuID !== undefined) {
-        // console.log(this.editMenu)
         const finish = await this.updateMenu(this.editMenu)
-        if (finish === 'updated!') {
+        if (finish === 'Updated!') {
           this.$router.push({ path: '/' })
         }
       }
@@ -84,5 +74,5 @@ export default {
 </script>
 
 <style>
-
+@import url("https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css");
 </style>

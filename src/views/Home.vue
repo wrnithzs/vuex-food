@@ -1,24 +1,27 @@
 <template>
   <div>
-    <div v-for=" (food) in allFoods" :key="food.id" class="card border-info mb-3" >
-        <div class="col-md-8-center">
+    <div v-if="isLoading === true ">
+      <h1> กรุณารอสักครู่ กำลังดาวน์โหลดข้อมูล </h1>
+    </div>
+    <ul>
+      <div v-for=" (food) in allFoods" :key="food.id" class="card border-info mb-3" >
           <div class="card-body">
             <h5 class="card-title">{{food.name}}</h5>
             <p class="card-text">Type: {{food.type}}</p>
             <p class="card-text">Price: {{food.price}} ฿</p>
-          </div>
-          <div class="row">
-            <div class="col-auto-mr-auto">
-              <router-link
-                :to="{name: 'EditMenu', params: { id: food.id } }"
-                class="btn btn-warning"
-              >Edit</router-link>&nbsp;
-              <button @click="del(food)" type="button" class="btn btn-danger">Delete</button>&nbsp;
+            <div class="row">
+              <div class="mx-auto">
+                <router-link
+                  :to="{name: 'EditMenu', params: { id: food.id } }"
+                  class="btn btn-warning"
+                >Edit</router-link>&nbsp;
+                <button @click="del(food)" type="button" class="btn btn-danger">Delete</button>&nbsp;
+              </div>
             </div>
           </div>
-        </div>
       </div>
-    </div>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -26,8 +29,15 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Home',
-  mounted () {
-    this.loadFoods()
+  data () {
+    return {
+      isLoading: false
+    }
+  },
+  async mounted () {
+    this.isLoading = true
+    await this.loadFoods()
+    this.isLoading = false
   },
   computed: {
     ...mapGetters({
@@ -39,13 +49,12 @@ export default {
       loadFoods: 'loadFoods',
       deleteFood: 'deleteFood'
     }),
-    edit () {
-      this.editFood()
-    },
-    del (food) {
-      console.log(food.id)
-      this.deleteFood(food.id)
-      this.loadFoods()
+    async del (food) {
+      const finish = await this.deleteFood(food.id)
+      console.log(finish)
+      if (finish === 'Deleted!') {
+        this.loadFoods()
+      }
     }
   }
 }
