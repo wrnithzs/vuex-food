@@ -4,7 +4,7 @@
       <h1> กรุณารอสักครู่ กำลังดาวน์โหลดข้อมูล </h1>
     </div>
     <ul>
-      <div v-for=" (food) in allFoods" :key="food.id" class="card border-info mb-3" >
+      <div v-for=" (food) in foods" :key="food.id" class="card border-info mb-3" >
           <div class="card-body">
             <h5 class="card-title">{{food.name}}</h5>
             <p class="card-text">Type: {{food.type}}</p>
@@ -15,7 +15,7 @@
                   :to="{name: 'EditMenu', params: { id: food.id } }"
                   class="btn btn-warning"
                 >Edit</router-link>&nbsp;
-                <button @click="del(food)" type="button" class="btn btn-danger">Delete</button>&nbsp;
+                <button @click="del(food.id)" type="button" class="btn btn-danger">Delete</button>&nbsp;
               </div>
             </div>
           </div>
@@ -26,34 +26,29 @@
 
 <script>
 // @ is an alias to /src
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   name: 'Home',
   data () {
     return {
-      isLoading: false
+      isLoading: false,
+      foods: []
     }
   },
   async mounted () {
     this.isLoading = true
-    await this.loadFoods()
+    this.foods = await this.loadFoods()
     this.isLoading = false
-  },
-  computed: {
-    ...mapGetters({
-      allFoods: 'allFoods'
-    })
   },
   methods: {
     ...mapActions({
       loadFoods: 'loadFoods',
       deleteFood: 'deleteFood'
     }),
-    async del (food) {
-      const finish = await this.deleteFood(food.id)
-      console.log(finish)
+    async del (foodId) {
+      const finish = await this.deleteFood(foodId)
       if (finish === 'Deleted!') {
-        this.loadFoods()
+        this.foods = await this.loadFoods()
       }
     }
   }

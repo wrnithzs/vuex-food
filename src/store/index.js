@@ -4,14 +4,6 @@ import { db } from '../firebase'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    foods: []
-  },
-  mutations: {
-    'SET_FOOD' (state, foodlist) {
-      state.foods = foodlist
-    }
-  },
   actions: {
     async loadFoods ({ commit }) {
       try {
@@ -26,12 +18,10 @@ export default new Vuex.Store({
           }
           foodlist.push(food)
         })
-        commit('SET_FOOD', foodlist)
         console.log('loaddata success!!')
-        return 'Loaded!'
+        return foodlist
       } catch {
         console.log('error!')
-        return 'error!'
       }
     },
     async addFoods ({ commit }, food) {
@@ -77,11 +67,6 @@ export default new Vuex.Store({
         console.log('updated error!')
         return 'error!'
       }
-    }
-  },
-  getters: {
-    allFoods (state) {
-      return state.foods
     }
   }
 })
